@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="australian_state">autralian_state.txt</file>
+    </qresource>
+</RCC>

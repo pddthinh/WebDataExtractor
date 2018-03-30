@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/uk">
+        <file alias="Simple-UK-postcode">Simple-UK-postcode.csv</file>
+        <file>uk-region-name.csv</file>
+    </qresource>
+</RCC>

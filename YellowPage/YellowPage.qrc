@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="us-state-list.txt">us-state-list.txt</file>
+    </qresource>
+</RCC>
