@@ -33,7 +33,6 @@ void DataEntry::initColName(const QStringList &alstColName)
 
 	foreach (QString lstrKey, alstColName)
 		mData.insert(lstrKey, QStringList());
-//		mData.insert(lstrKey, QLatin1String(""));
 
 	mColumns = alstColName;
 }
@@ -58,7 +57,6 @@ void DataEntry::clearData()
 {
 	foreach(QString lstrKey, mData.keys())
 		mData[lstrKey] = QStringList();
-//		mData[lstrKey] = QLatin1String("");
 }
 
 /**
@@ -104,8 +102,6 @@ bool DataEntry::updatePropertyString(const QString &astrKey, const QString &astr
 			break;
 		}
 
-//		QString tmp = astrValue.trimmed()
-//					  .replace(QLatin1String("'"), QLatin1String("''"));
 		mData[astrKey] = QStringList(astrValue.trimmed());
 	} while(0);
 
@@ -136,7 +132,12 @@ bool DataEntry::updateProperty(const QString &key, QStringList value, bool autoC
 			value << QLatin1String(""); // add an empty padding entry
 
 		if (autoCorrect) {
+			QStringList tmpList;
 			foreach(QString tmp, value)
+				if (tmp.length() > 0)
+					tmpList << tmp;
+
+			foreach(QString tmp, tmpList)
 				mData[key] << Utilities::correctData(tmp);
 
 			break;

@@ -53,12 +53,15 @@ SUBDIRS += \
 #	homecheck_co_uk \
 #	defaqto_com \
 #	thekennelclub_org_uk \
+	thekennelclub_org_uk2 \ # findapuppy
 #	find_a_vet \
 #	ic_upei_ca \
 #	icatcare_org \
 #	defaqto_com2 \
-	findpetboarding_com \
-	dogsandpuppies_co_uk \
+#	findpetboarding_com \
+#	dogsandpuppies_co_uk \
+	gundogbreeders_co_uk \
+	dogbreeds_co_uk \
 
 ###########################################################
 

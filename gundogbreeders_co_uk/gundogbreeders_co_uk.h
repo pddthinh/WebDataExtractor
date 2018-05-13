@@ -1,5 +1,5 @@
-#ifndef dogsandpuppies_H
-#define dogsandpuppies_H
+#ifndef gundogbreeders_co_uk_H
+#define gundogbreeders_co_uk_H
 
 #include "WDEInclude.h"
 
@@ -9,12 +9,12 @@
 
 using namespace nsBaseWebEngine;
 
-class dogsandpuppies : public BaseWebEngine
+class gundogbreeders_co_uk : public BaseWebEngine
 {
 	Q_OBJECT
 
 public:
-	dogsandpuppies(QWidget *apParent = 0);
+	gundogbreeders_co_uk(QWidget *apParent = 0);
 
 protected:
 	void doStart();
@@ -26,12 +26,7 @@ protected:
 	}
 
 private:
-	int miCatalog;
 
-private:
-	void extractBreeders();
-	void extractDetail();
-	bool isEndCategory();
 };
 
-#endif // dogsandpuppies_H
+#endif // gundogbreeders_co_uk_H

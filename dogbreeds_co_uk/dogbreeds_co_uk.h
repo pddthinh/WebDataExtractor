@@ -1,5 +1,5 @@
-#ifndef dogsandpuppies_H
-#define dogsandpuppies_H
+#ifndef dogbreeds_co_uk_H
+#define dogbreeds_co_uk_H
 
 #include "WDEInclude.h"
 
@@ -9,12 +9,12 @@
 
 using namespace nsBaseWebEngine;
 
-class dogsandpuppies : public BaseWebEngine
+class dogbreeds_co_uk : public BaseWebEngine
 {
 	Q_OBJECT
 
 public:
-	dogsandpuppies(QWidget *apParent = 0);
+	dogbreeds_co_uk(QWidget *apParent = 0);
 
 protected:
 	void doStart();
@@ -26,12 +26,8 @@ protected:
 	}
 
 private:
-	int miCatalog;
-
-private:
-	void extractBreeders();
-	void extractDetail();
-	bool isEndCategory();
+	void getBreedItems();
+	void getBreederDetail();
 };
 
-#endif // dogsandpuppies_H
+#endif // dogbreeds_co_uk_H

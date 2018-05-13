@@ -106,6 +106,11 @@ void dogsandpuppies::doWebLoadFinished() {
 }
 
 ////////////////////////////////////////////////////////////////////////
+
+bool dogsandpuppies::isEndCategory() {
+	return (miCatalog > ('A' - 'A'));
+}
+
 void dogsandpuppies::extractBreeders() {
 	do {
 		QWebElementCollection links;
@@ -121,7 +126,7 @@ void dogsandpuppies::extractBreeders() {
 			// go to next category
 			miCatalog ++;
 
-			if (miCatalog > ('Z' - 'A')) {
+			if (isEndCategory()) {
 				// show end of category list
 				showFinishMsg(QLatin1String("Finish parsing Breeders category list!"));
 				break;
@@ -140,15 +145,27 @@ void dogsandpuppies::extractBreeders() {
 
 		foreach(link, links) {
 			linkURL = mpWebView->getHrefURL(&link);
-			mpDBManager->insertTmpTable(linkURL);
+//			mpDBManager->insertTmpTable(linkURL);
+			mlstDataLink << linkURL;
 			processed++;
 		}
-		if (processed > 0)
+		if (processed > 0) {
 			qDebug() << QLatin1String("-->> Processed list: ") << processed;
+		}
+
+		if (mlstDataLink.count() > 0) {
+			DEF_LOG_LIST(mlstDataLink, "");
+			mlstDataLink.clear();
+		}
 
 		// go to next page
 		link = mpWebView->findFirst(QLatin1String("a.nav_next"));
 		if (!link.isNull()) {
+			if (mlstDataLink.count() > 0) {
+				DEF_LOG_LIST(mlstDataLink, "");
+				mlstDataLink.clear();
+			}
+
 			meState = E_STATE_INIT;
 			mpWebView->doClick(&link);
 			break;
@@ -159,7 +176,12 @@ void dogsandpuppies::extractBreeders() {
 		// go to next category
 		miCatalog ++;
 
-		if (miCatalog > ('Z' - 'A')) {
+		if (isEndCategory()) {
+			if (mlstDataLink.count() > 0) {
+				DEF_LOG_LIST(mlstDataLink, "");
+				mlstDataLink.clear();
+			}
+
 			// show end of category list
 			showFinishMsg(QLatin1String("Finish parsing Breeders category list!"));
 			break;

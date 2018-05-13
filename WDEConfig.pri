@@ -4,6 +4,9 @@ CONFIG(release, release|debug): buildDir=../wde-build
 ## using MySQL database
 #DEFINES += USE_DATABASE
 
+## use SQlite
+DEFINES += USE_SQLITE
+
 coreLib = WDELib
 contains(DEFINES, USE_DATABASE) {
 	coreLib = WDELibMySQL

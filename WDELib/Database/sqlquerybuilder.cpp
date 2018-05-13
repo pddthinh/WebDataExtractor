@@ -25,7 +25,11 @@ QString SQLQueryBuilder::getSQLCreateTable(const QString &astrTableName,
 										   bool ablComment)
 {
 	QString lstrRet;
-	QString lstrDefaultCharset = QLatin1String("ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+	QString lstrDefaultCharset = QLatin1String(";");
+#ifndef USE_SQLITE
+	lstrDefaultCharset = QLatin1String("ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+#endif
+
 	QString lstrKey;
 	QString lstrTmp;
 	int		liIdx;
@@ -44,6 +48,10 @@ QString SQLQueryBuilder::getSQLCreateTable(const QString &astrTableName,
 
 	// Build the create table query
 	lstrRet = QString("CREATE TABLE `%1`(").arg(astrTableName);
+#ifdef USE_SQLITE
+	lstrRet = QString("CREATE TABLE IF NOT EXISTS `%1`(").arg(astrTableName);
+#endif
+
 	for(liIdx = 0; liIdx < alstColumn.length(); liIdx++)
 	{
 		lstrTmp = QLatin1String("`%1` LONGTEXT, ");
@@ -96,6 +104,10 @@ QString SQLQueryBuilder::getSQLInsert(const QString &astrTableName,
 									  const DATA_MAP &aMap)
 {
 	QString lstrRet = QLatin1String("INSERT IGNORE INTO `%1`(");
+#ifdef USE_SQLITE
+	lstrRet = QLatin1String("INSERT OR IGNORE INTO `%1`(");
+#endif
+
 	QString lstrRetTmp = QLatin1String("`%1`, ");
 	QString lstrValue = QLatin1String("VALUES (");
 	QString lstrValueTmp = QLatin1String("'%1', ");
@@ -105,8 +117,7 @@ QString SQLQueryBuilder::getSQLInsert(const QString &astrTableName,
 	QString tmp;
 
 	lstrRet = lstrRet.arg(astrTableName);
-	foreach(lstrKey, llstKey)
-	{
+	foreach(lstrKey, llstKey) {
 		lstrRet += lstrRetTmp.arg(lstrKey);
 
 		if (aMap[lstrKey].isEmpty()) {
@@ -126,11 +137,6 @@ QString SQLQueryBuilder::getSQLInsert(const QString &astrTableName,
 
 		value.replace(QLatin1String("'"), QLatin1String("''"));
 		lstrValue += lstrValueTmp.arg(value);
-
-//		if (aMap[lstrKey].isEmpty() == false)
-//			lstrValue += lstrValueTmp.arg(aMap[lstrKey]);
-//		else
-//			lstrValue += QLatin1String("null, ");
 	}
 
 	if(lstrRet.endsWith(QLatin1String(", ")))

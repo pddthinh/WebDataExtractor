@@ -5,10 +5,13 @@
 #include <QSqlError>
 #include <QSqlRecord>
 
-DBManager::DBManager() { }
+DBManager::DBManager() {
+	mpSQLBuilder = new SQLQueryBuilder();
+}
 
 DBManager::DBManager(const QString& dbPath) {
 	mDBPath = dbPath;
+	mpSQLBuilder = new SQLQueryBuilder();
 }
 
 bool DBManager::open(const QString &dbPath) {
@@ -95,3 +98,47 @@ QStringList DBManager::getAllFromTmpTable(const QString &tbName) {
 
 	return result;
 }
+
+//---------------------------------------------------------
+// Implementation for data table
+bool DBManager::createDataTable(const QString &table,
+								const QStringList &alstColumn,
+								const INT_LIST &alstKey) {
+	bool blRet = false;
+
+	QString sqlCreate = mpSQLBuilder->getSQLCreateTable(table, alstColumn, alstKey);
+#if 0
+	qDebug() << sqlCreate;
+#endif
+
+	QSqlQuery create(mDB);
+	blRet = create.exec(sqlCreate);
+	if (!blRet)
+		qDebug() << QLatin1String("Create data table failed: ")
+				 << create.lastError().text();
+	create.clear();
+
+	return blRet;
+}
+
+bool DBManager::insertData(DataEntry* data,
+						   const QString& table) {
+	bool blRet = false;
+
+	if (!data)
+		return blRet;
+
+	QSqlQuery insert(mDB);
+	QString sql = data->getSQLString(table);
+#if 0
+	qDebug() << sql;
+#endif
+
+	blRet = insert.exec(sql);
+	if (!blRet)
+		qDebug() << QLatin1String("Can not insert data into DB!")
+				 << insert.lastError().text();
+
+	return blRet;
+}
+//---------------------------------------------------------
