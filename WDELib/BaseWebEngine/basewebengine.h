@@ -40,11 +40,9 @@ using namespace nsDatabase;
 class DBLogger;
 class XMLLogger;
 
-namespace nsBaseWebEngine
-{
+namespace nsBaseWebEngine {
 
-typedef enum E_STATE
-{
+typedef enum E_STATE {
 	E_STATE_NONE = 0,
 	E_STATE_INIT,
 	E_STATE_GET_MAIN_CATEGORY,
@@ -56,8 +54,7 @@ typedef enum E_STATE
 	E_STATE_MAX
 } ENU_STATE;
 
-class WDE_LIB_EXPORT BaseWebEngine : public QDialog
-{
+class WDE_LIB_EXPORT BaseWebEngine : public QDialog {
 	Q_OBJECT
 
 public:
@@ -170,8 +167,6 @@ protected:
 	bool updateData(DataEntry *apData, int aiColIdx, QWebElement *apElement, QString property = "");
 	bool updateData(DataEntry *apData, int aiColIdx, const QString& selector, QWebElement *parent = 0,
 					QString property = "");
-	//	bool updateData(DataEntry *apData, int aiColIdx, QWebElement *apElement);
-	//	bool updateData(DataEntry *apData, int aiColIdx, const QString& selector);
 	void saveData(DATA_LIST *apData = NULL, bool ablCheckEmpty = false);
 	void saveXMLData(DATA_LIST *pData);
 
@@ -247,21 +242,6 @@ private:
 	QString			mstrSSLCertificatePath;
 	QString			mstrSSLCertificatePassword;
 	QSslConfiguration		*mpSslConfig;
-
-#ifdef USE_DATABASE
-/*
- * Support MySQL
- */
-protected:
-	MySQLHandler	*mpMySQLHandler;
-	QString			mDBName;
-	QString			mDBHost;
-	QString			mDBUsername;
-	QString			mDBPassword;
-
-//public:
-//	virtual void initMySQL(){}
-#endif // USE_DATABASE
 };
 
 #define WebEngine_Main(WebObject) \

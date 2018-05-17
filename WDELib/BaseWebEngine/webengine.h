@@ -19,9 +19,7 @@ public:
 	explicit WebEngine(QWidget *parent = 0);
 	void doClick(const QString &astrSelector);
 	void doClick(QWebElement *apWebElement);
-signals:
-
-public slots:
+	void doScroll(int posX, int posY);
 
 public:
 	QWebElement document() const;

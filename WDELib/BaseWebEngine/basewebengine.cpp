@@ -38,8 +38,7 @@ BaseWebEngine::BaseWebEngine(QWidget *parent)
 	loadSettings();
 }
 
-void BaseWebEngine::initLocalMembers()
-{
+void BaseWebEngine::initLocalMembers() {
 	mpLog = NULL;
 	//	mpLoggerTask = NULL;
 	mpStatus = NULL;
@@ -62,8 +61,7 @@ void BaseWebEngine::initLocalMembers()
 	mpRunDelayTimer = NULL;
 }
 
-void BaseWebEngine::initBaseControl()
-{
+void BaseWebEngine::initBaseControl() {
 	QGridLayout		*lpLayout = new QGridLayout(this);
 	QPushButton		*lpBtnStart, *lpBtnStop;
 
@@ -102,24 +100,20 @@ void BaseWebEngine::initBaseControl()
 	connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(sltAboutToQuit()));
 }
 
-void BaseWebEngine::initCustomControl()
-{
-	do
-	{
+void BaseWebEngine::initCustomControl() {
+	do {
 		mpExtFileLoading = NULL;
 
 		initExtWidget();
 
-		if(mpExtFileLoading == NULL)
-			break;
+		if(mpExtFileLoading == NULL) break;
 
 		layout()->addWidget(mpExtFileLoading);
 		mlstCtrlWidget << mpExtFileLoading;
 	} while(false);
 }
 
-void BaseWebEngine::init()
-{
+void BaseWebEngine::init() {
 	// Init url
 	if(mstrBaseURL.isEmpty())
 		mstrBaseURL = DEF_STR_EMPTY;
@@ -138,11 +132,6 @@ void BaseWebEngine::init()
 
 	mpDBLogger = new DBLogger(mpLog, DEF_STR_DEFAULT_DATA_LOG_NAME);
 
-	//	mpXMLLogger = new XMLLogger(mpLog);
-#ifdef USE_DATABASE
-	mpMySQLHandler = new MySQLHandler(mpLog);
-#endif
-
 	mpPauseTimer = new QTimer(this);
 	connect(mpPauseTimer, SIGNAL(timeout()), this, SLOT(sltTimerPauseResum()));
 	mpPauseTimer->setInterval(1500);
@@ -159,32 +148,27 @@ void BaseWebEngine::init()
 	move(QApplication::desktop()->availableGeometry().center() - this->rect().center());
 }
 
-void BaseWebEngine::setEnableCtrlWidget(bool ablEnable)
-{
-	foreach (QWidget *lpWidget, mlstCtrlWidget)
-	{
+void BaseWebEngine::setEnableCtrlWidget(bool ablEnable) {
+	foreach (QWidget *lpWidget, mlstCtrlWidget) {
 		if(lpWidget == NULL)
 			continue;
 		lpWidget->setEnabled(ablEnable);
 	}
 }
 
-void BaseWebEngine::setWebLoadTimeout(int aiTimeout)
-{
+void BaseWebEngine::setWebLoadTimeout(int aiTimeout) {
 	if(mpStopTimer)
 		mpStopTimer->setInterval(aiTimeout);
 }
 
-void BaseWebEngine::createDBLog()
-{
+void BaseWebEngine::createDBLog() {
 	// init child database
 	initDatabase();
 
 	SQLQueryBuilder lbuilder;
 	QString lstrCreateTable = lbuilder.getSQLCreateTable(mDbTableName, mDbLstColName, mDbLstKey, true);
 
-	if(mpDBLogger)
-	{
+	if(mpDBLogger) {
 		mpDBLogger->setTableName(mDbTableName);
 		mpDBLogger->logString(lstrCreateTable);
 	}
@@ -192,16 +176,14 @@ void BaseWebEngine::createDBLog()
 	mData.initColName(mDbLstColName);
 }
 
-void BaseWebEngine::logDataList()
-{
+void BaseWebEngine::logDataList() {
 	mpDBLogger->logDataList(mlstData);
 	DEF_LOG(mstrSaveDataMsgFrmt.arg(mlstData.count()));
 
 	mlstData.clear();
 }
 
-void BaseWebEngine::sltTimerForceStopLoad()
-{
+void BaseWebEngine::sltTimerForceStopLoad() {
 	qDebug() << QLatin1String("sltTimerForceStopLoad --- Timeout");
 
 	// Fix bug emit enter sltWebLoadFinished 2 times
@@ -213,25 +195,11 @@ void BaseWebEngine::sltTimerForceStopLoad()
 	connect(mpWebView, SIGNAL(loadFinished(bool)), this, SLOT(sltWebLoadFinished(bool)));
 }
 
-void BaseWebEngine::sltBtnStartClick()
-{
+void BaseWebEngine::sltBtnStartClick() {
 	mlstCategoryLink.clear();
 	mlstDataLink.clear();
 
 	createDBLog();
-
-#ifdef USE_DATABASE
-	mpMySQLHandler->setDBName(mDBName);
-	mpMySQLHandler->setHostname(mDBHost);
-	mpMySQLHandler->setUsername(mDBUsername);
-	mpMySQLHandler->setPassword(mDBPassword);
-
-	QStringList llstBountKey;
-
-	bool lblRet = mpMySQLHandler->initDatabase(mDbTableName, mDbLstColName, mDbLstKey, llstBountKey);
-	DEF_LOG(QString("MySQL Database init: %1").arg(lblRet));
-	qDebug() << "Create db result: " << lblRet;
-#endif // USE_DATABASE
 
 	// Load JQuery
 	//	loadJQuery();
@@ -247,8 +215,7 @@ void BaseWebEngine::sltBtnStartClick()
 	doStart();
 }
 
-void BaseWebEngine::sltBtnStopClick()
-{
+void BaseWebEngine::sltBtnStopClick() {
 	mpStopTimer->stop();
 	mpWebView->stop();
 
@@ -257,18 +224,15 @@ void BaseWebEngine::sltBtnStopClick()
 	doStop();
 }
 
-void BaseWebEngine::sltWebLoadStated()
-{
+void BaseWebEngine::sltWebLoadStated() {
 	//	qDebug() << "web load started signal";
 	mpStopTimer->start();
 
 	//	mpWebView->page()->setNetworkAccessManager(mpNetManager);
 }
 
-void BaseWebEngine::sltWebLoadFinished(bool ablStatus)
-{
-	do
-	{
+void BaseWebEngine::sltWebLoadFinished(bool ablStatus) {
+	do {
 		mpStopTimer->stop();
 
 		if(ablStatus == false)
@@ -291,8 +255,7 @@ void BaseWebEngine::sltWebLoadFinished(bool ablStatus)
 		//			mblApplyJQuery = true;
 		//		}
 
-		if (mblLastLoadStatus == true)
-		{
+		if (mblLastLoadStatus) {
 			doWebLoadFinished();
 			break;
 		}
@@ -301,35 +264,28 @@ void BaseWebEngine::sltWebLoadFinished(bool ablStatus)
 	} while(false);
 }
 
-void BaseWebEngine::sltWebStatusChanged(const QString &astrStatus)
-{
+void BaseWebEngine::sltWebStatusChanged(const QString &astrStatus) {
 	mpWebProgress->setText(astrStatus);
 }
 
-void BaseWebEngine::sltWebLoadProgress(int aiProgress)
-{
+void BaseWebEngine::sltWebLoadProgress(int aiProgress) {
 	mpWebProgress->setText(mstrProgressFrmt.arg(aiProgress));
 }
 
-void BaseWebEngine::sltWebLinkHover(const QString &astrLink, const QString &astrTitle, const QString &astrTextContent)
-{
+void BaseWebEngine::sltWebLinkHover(const QString &astrLink, const QString &astrTitle, const QString &astrTextContent) {
 	Q_UNUSED(astrTextContent)
 	Q_UNUSED(astrTitle)
 
 	mpWebProgress->setText(astrLink);
 }
 
-void BaseWebEngine::sltWebURLChanged(const QUrl &aURL)
-{
+void BaseWebEngine::sltWebURLChanged(const QUrl &aURL) {
 	mpURL->setText(aURL.toString());
 }
 
-QString BaseWebEngine::updateURL(QString astrURL) const
-{
-	do
-	{
-		if (astrURL.indexOf(QLatin1String("://")) > 0)
-			break;
+QString BaseWebEngine::updateURL(QString astrURL) const {
+	do {
+		if (astrURL.indexOf(QLatin1String("://")) > 0) break;
 
 		QString lstrTmp = astrURL.toLower();
 		if(!lstrTmp.startsWith(QLatin1String("http")))
@@ -339,12 +295,9 @@ QString BaseWebEngine::updateURL(QString astrURL) const
 	return astrURL;
 }
 
-void BaseWebEngine::loadPage(QString astrURL)
-{
-	do
-	{
-		if(mpWebView == NULL)
-		{
+void BaseWebEngine::loadPage(QString astrURL) {
+	do {
+		if(mpWebView == NULL) {
 			qWarning("BaseWebEngine::loadPage --> WebView is NULL");
 			break;
 		}
@@ -361,16 +314,13 @@ void BaseWebEngine::loadPage(QString astrURL)
 	} while(false);
 }
 
-bool BaseWebEngine::gotoNextDataLink(ENU_STATE aeNextState)
-{
+bool BaseWebEngine::gotoNextDataLink(ENU_STATE aeNextState) {
 	bool	lblRet = false;
 
-	do
-	{
+	do {
 		setStatus(mstrRemainItemFrmt.arg(mlstDataLink.count()));
 
-		if(mlstDataLink.isEmpty())
-		{
+		if(mlstDataLink.isEmpty()) {
 			DEF_LOG(QLatin1String("gotoNextDataLink ---> Finished extract data"));
 			break;
 		}
@@ -383,15 +333,12 @@ bool BaseWebEngine::gotoNextDataLink(ENU_STATE aeNextState)
 	return lblRet;
 }
 
-bool BaseWebEngine::gotoNextCategoryLink(ENU_STATE aeNextState)
-{
+bool BaseWebEngine::gotoNextCategoryLink(ENU_STATE aeNextState) {
 	bool	lblRet = false;
 
-	do
-	{
+	do {
 		setStatus(mstrRemainItemFrmt.arg(mlstCategoryLink.count()));
-		if(mlstCategoryLink.isEmpty())
-		{
+		if(mlstCategoryLink.isEmpty()) {
 			DEF_LOG(QLatin1String("gotoNextCategoryLink ---> Finished extract data"));
 			break;
 		}
@@ -404,13 +351,11 @@ bool BaseWebEngine::gotoNextCategoryLink(ENU_STATE aeNextState)
 	return lblRet;
 }
 
-bool BaseWebEngine::loadJQuery(QString astrPath)
-{
+bool BaseWebEngine::loadJQuery(QString astrPath) {
 	bool    lblRet = false;
 	QFile   lFile;
 
-	do
-	{
+	do {
 		if(astrPath.isEmpty())
 			astrPath = QLatin1String(":/jquery.js");
 
@@ -441,8 +386,7 @@ bool BaseWebEngine::loadJQuery(QString astrPath)
 //	}
 //}
 
-void BaseWebEngine::showFinishMsg(QString astrMsg)
-{
+void BaseWebEngine::showFinishMsg(QString astrMsg) {
 	meState = E_STATE_MAX;
 
 	if(astrMsg.isEmpty())
@@ -459,16 +403,13 @@ void BaseWebEngine::showFinishMsg(QString astrMsg)
 	lmsg.exec();
 }
 
-bool BaseWebEngine::updateBaseRootURL(const QString &astrURL)
-{
+bool BaseWebEngine::updateBaseRootURL(const QString &astrURL) {
 	bool	lblRet = false;
 	QStringList	llstTmp;
 
-	do
-	{
+	do {
 		llstTmp = astrURL.split(QLatin1String("/"));
-		if(llstTmp.isEmpty())
-			break;
+		if(llstTmp.isEmpty()) break;
 
 		if(llstTmp.count() >= 2)
 			llstTmp.removeLast();
@@ -492,20 +433,16 @@ bool BaseWebEngine::updateBaseRootURL(const QString &astrURL)
  * @param property
  * @return
  */
-bool BaseWebEngine::updateData(DataEntry *apData, int aiColIdx, QWebElement *apElement, QString property)
-{
+bool BaseWebEngine::updateData(DataEntry *apData, int aiColIdx, QWebElement *apElement, QString property) {
 	bool lblRet = false;
 	QString lstrTmp("");
 
-	do
-	{
-		if (apData == NULL || aiColIdx < 0 || apElement == NULL)
-			break;
+	do {
+		if (apData == NULL || aiColIdx < 0 || apElement == NULL) break;
 
 		// get element value
 		do {
-			if (apElement->isNull())
-				break;
+			if (apElement->isNull()) break;
 
 			if (property.length() == 0) {
 				lstrTmp = apElement->toPlainText();
@@ -540,8 +477,7 @@ bool BaseWebEngine::updateData(DataEntry *apData, int aiColIdx, QWebElement *apE
  * @return
  */
 bool BaseWebEngine::updateData(DataEntry *apData, int aiColIdx, const QString &selector,
-							   QWebElement *parent, QString property)
-{
+							   QWebElement *parent, QString property) {
 	QWebElement element;
 
 	if (parent == NULL)
@@ -559,15 +495,12 @@ bool BaseWebEngine::updateData(DataEntry *apData, int aiColIdx, const QString &s
  * @param apData
  * @param ablCheckEmpty
  */
-void BaseWebEngine::saveData(DATA_LIST *apData, bool ablCheckEmpty)
-{
-	do
-	{
+void BaseWebEngine::saveData(DATA_LIST *apData, bool ablCheckEmpty) {
+	do {
 		if (apData == NULL)
 			apData = &mlstData;
 
-		if (mpDBLogger == NULL)
-			break;
+		if (mpDBLogger == NULL) break;
 
 		if (ablCheckEmpty == true &&
 				apData->isEmpty() == true)
@@ -588,11 +521,9 @@ void BaseWebEngine::saveData(DATA_LIST *apData, bool ablCheckEmpty)
  */
 void BaseWebEngine::saveXMLData(DATA_LIST *pData) {
 	do {
-		if (!pData)
-			break;
+		if (!pData) break;
 
-		if (!mpXMLLogger)
-			break;
+		if (!mpXMLLogger) break;
 
 		int iSaved = mpXMLLogger->logDataList(pData);
 		DEF_LOG(QString(QLatin1String("Saved: %1")).arg(iSaved));
@@ -600,17 +531,13 @@ void BaseWebEngine::saveXMLData(DATA_LIST *pData) {
 	} while (false);
 }
 
-void BaseWebEngine::setSSLCertificate(QString cerPath, QString cerPassword)
-{
-	do
-	{
-		if (cerPath.isEmpty() == true)
-			break;
+void BaseWebEngine::setSSLCertificate(QString cerPath, QString cerPassword) {
+	do {
+		if (cerPath.isEmpty()) break;
 
 		mpSslConfig = new QSslConfiguration();
 		QList<QSslCertificate> certificates = QSslCertificate::fromPath(cerPath);
-		foreach (QSslCertificate cer, certificates)
-		{
+		foreach (QSslCertificate cer, certificates) {
 			qDebug() << "cer, issue info: " << cer.issuerInfo(QSslCertificate::Organization);
 		}
 
@@ -621,8 +548,7 @@ void BaseWebEngine::setSSLCertificate(QString cerPath, QString cerPassword)
 	} while (false);
 }
 
-void BaseWebEngine::sltTimerPauseResum()
-{
+void BaseWebEngine::sltTimerPauseResum() {
 	mpPauseTimer->stop();
 
 	doWebLoadFinished();
@@ -634,8 +560,7 @@ void BaseWebEngine::sltTimerPauseResum()
  * @param rtLow		Min wait (s)
  * @param rtHight	Max wait (s)
  */
-void BaseWebEngine::doWait(int rtLow, int rtHight)
-{
+void BaseWebEngine::doWait(int rtLow, int rtHight) {
 	do {
 		if (mpRunDelayTimer == NULL) {
 			qWarning() << QLatin1String("Running timer is not initialized!");
@@ -659,8 +584,7 @@ void BaseWebEngine::sltRunDelayTimeout() {
 
 void BaseWebEngine::loadSettings() {
 	do {
-		if (mpAppPref == NULL)
-			break;
+		if (mpAppPref == NULL) break;
 
 		{
 			mpAppPref->beginGroup(WDE_SETTINGS_GRP_WND_SIZE);
@@ -675,8 +599,7 @@ void BaseWebEngine::loadSettings() {
 
 void BaseWebEngine::saveSettings() {
 	do {
-		if (mpAppPref == NULL)
-			break;
+		if (mpAppPref == NULL) break;
 
 		{
 			mpAppPref->beginGroup(WDE_SETTINGS_GRP_WND_SIZE);

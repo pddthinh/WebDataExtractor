@@ -11,8 +11,7 @@
 using namespace nsBaseWebEngine;
 
 WebEngine::WebEngine(QWidget *parent)
-	: QWebView(parent)
-{
+	: QWebView(parent) {
 	QWebSettings * lpSetting = QWebSettings::globalSettings();
 
 	lpSetting->setAttribute(QWebSettings::JavaEnabled, true);
@@ -28,14 +27,12 @@ WebEngine::WebEngine(QWidget *parent)
 	mstrCmbSelectedCode = "this.selectedIndex = %1;";
 }
 
-QWebElement WebEngine::document() const
-{
+QWebElement WebEngine::document() const {
 	QWebFrame	*lpFrame = page()->mainFrame();
 	return lpFrame->documentElement();
 }
 
-QWebElement WebEngine::getElementById(QString astrId)
-{
+QWebElement WebEngine::getElementById(QString astrId) {
 	QWebElementCollection lElementCol;
 	QString lstrSelector = "*#" + astrId;
 	lElementCol = document().findAll(lstrSelector);
@@ -46,15 +43,11 @@ QWebElement WebEngine::getElementById(QString astrId)
 	return lElementCol.at(0);
 }
 
-void WebEngine::doClick(QWebElement *apWebElement)
-{
-	do
-	{
-		if(!apWebElement)
-			break;
+void WebEngine::doClick(QWebElement *apWebElement) {
+	do {
+		if(!apWebElement) break;
 
-		if(apWebElement->isNull())
-			break;
+		if(apWebElement->isNull()) break;
 
 		apWebElement->setFocus();
 
@@ -63,13 +56,11 @@ void WebEngine::doClick(QWebElement *apWebElement)
 	}while(false);
 }
 
-void WebEngine::doClick(const QString &astrSelector)
-{
+void WebEngine::doClick(const QString &astrSelector) {
 	QWebElement lElement;
 
 	lElement = document().findFirst(astrSelector);
-	if(lElement.isNull())
-	{
+	if(lElement.isNull()) {
 		qWarning("WebEngine::doClick -- No element found");
 		return;
 	}
@@ -80,87 +71,76 @@ void WebEngine::doClick(const QString &astrSelector)
 	doClick(&lElement);
 }
 
-void WebEngine::executeJS(const QString astrJS)
-{
+void WebEngine::doScroll(int posX, int posY) {
+	QString js("window.scrollTo(%1, %2);");
+	executeJS(js.arg(posX).arg(posY));
+}
+
+void WebEngine::executeJS(const QString astrJS) {
 	QWebFrame	*lpFrame = page()->mainFrame();
 	lpFrame->evaluateJavaScript(astrJS);
 }
 
-QWebElementCollection WebEngine::findAll(QString astrQuery)
-{
+QWebElementCollection WebEngine::findAll(QString astrQuery) {
 	return document().findAll(astrQuery);
 }
 
-QWebElement WebEngine::findFirst(QString astrQuery)
-{
+QWebElement WebEngine::findFirst(QString astrQuery) {
 	return document().findFirst(astrQuery);
 }
 
-bool WebEngine::changeCmbSelectedElement(QWebElement *apCmbElement, int aiSelectedItem)
-{
+bool WebEngine::changeCmbSelectedElement(QWebElement *apCmbElement, int aiSelectedItem) {
 	bool	lblRet = false;
 	QWebElementCollection	leCol;
 
-	do
-	{
-		if(apCmbElement == NULL)
-			break;
+	do {
+		if(apCmbElement == NULL) break;
 
-		if(apCmbElement->isNull())
-			break;
+		if(apCmbElement->isNull()) break;
 
-		if(aiSelectedItem < 0)
-			break;
+		if(aiSelectedItem < 0) break;
 
 		leCol = apCmbElement->findAll("option");
-		if(aiSelectedItem >= leCol.count())
-			break;
+		if(aiSelectedItem >= leCol.count()) break;
 
 		apCmbElement->evaluateJavaScript(mstrCmbSelectedCode.arg(aiSelectedItem));
 		lblRet = true;
-	}while(false);
+	} while(false);
 
 	return lblRet;
 }
 
 bool WebEngine::changeCmbSelectedElement(QWebElement *apCmbElement,
 										 QString astrSelectedItem,
-										 QString selected)
-{
+										 QString selected) {
 	bool	lblRet = false;
 	QWebElement				leTmp;
 	QWebElementCollection	leCol;
 	int						liIdx;
 
-	do
-	{
-		if(apCmbElement == NULL)
-			break;
+	do {
+		if(apCmbElement == NULL) break;
 
-		if(apCmbElement->isNull())
-			break;
+		if(apCmbElement->isNull()) break;
 
 		leCol = apCmbElement->findAll("option");
 		foreach (leTmp, leCol)
 			leTmp.removeAttribute("selected");
 
-		for(liIdx = 0; liIdx < leCol.count(); liIdx++)
-		{
-			if(leCol[liIdx].toPlainText() == astrSelectedItem)
-			{
+		for(liIdx = 0; liIdx < leCol.count(); liIdx++) {
+			if(leCol[liIdx].toPlainText() == astrSelectedItem) {
 				apCmbElement->setAttribute(QLatin1String("selectedIndex"), QString(liIdx));
 				leCol[liIdx].setAttribute(QLatin1String("selected"), selected);
 				lblRet = true;
 				break;
 			}
 		}
-	}while(false);
+	} while(false);
 
 	return lblRet;
 }
 
-bool WebEngine::changeCmbSelectedElement(QString astrCmbElementSelector, int aiSelectedItem)
-{
+bool WebEngine::changeCmbSelectedElement(QString astrCmbElementSelector, int aiSelectedItem) {
 	QWebElement		lelement;
 
 	lelement = document().findFirst(astrCmbElementSelector);
@@ -168,8 +148,7 @@ bool WebEngine::changeCmbSelectedElement(QString astrCmbElementSelector, int aiS
 	return changeCmbSelectedElement(&lelement, aiSelectedItem);
 }
 
-bool WebEngine::changeCmbSelectedElement(QString astrCmbElementSelector, QString astrSelectedItem)
-{
+bool WebEngine::changeCmbSelectedElement(QString astrCmbElementSelector, QString astrSelectedItem) {
 	QWebElement		lelement;
 
 	lelement = document().findFirst(astrCmbElementSelector);
@@ -177,20 +156,16 @@ bool WebEngine::changeCmbSelectedElement(QString astrCmbElementSelector, QString
 	return changeCmbSelectedElement(&lelement, astrSelectedItem);
 }
 
-QString WebEngine::getHrefURL(QWebElement *apAElement)
-{
+QString WebEngine::getHrefURL(QWebElement *apAElement) {
 	QString lstrHrefURL = QLatin1String("");
 
-	do
-	{
-		if (apAElement == NULL)
-		{
+	do {
+		if (apAElement == NULL) {
 			qDebug() << QLatin1String("WebEngine::getHrefURL - Parameter is NULL");
 			break;
 		}
 
-		if (apAElement->isNull())
-		{
+		if (apAElement->isNull()) {
 			qDebug() << QLatin1String("WebEngine::getHrefURL - Link element is NULL");
 			break;
 		}
@@ -206,8 +181,7 @@ QString WebEngine::getHrefURL(QWebElement *apAElement)
 
 QWebElementCollection WebEngine::findAllElement(QString tag,
 												QString property, QString value,
-												QWebElement *apParent)
-{
+												QWebElement *apParent) {
 	QString selector = QString(CSS_FORMAT)
 					   .arg(tag)
 					   .arg(property)
@@ -220,8 +194,7 @@ QWebElementCollection WebEngine::findAllElement(QString tag,
 
 QWebElement WebEngine::findFirstElement(QString tag,
 										QString property, QString value,
-										QWebElement *apParent)
-{
+										QWebElement *apParent) {
 	QString selector = QString(CSS_FORMAT)
 					   .arg(tag)
 					   .arg(property)
@@ -232,8 +205,7 @@ QWebElement WebEngine::findFirstElement(QString tag,
 	return apParent->findFirst(selector);
 }
 
-QWebElementCollection WebEngine::findAllDiv(QString property, QString value, QWebElement *apParent)
-{
+QWebElementCollection WebEngine::findAllDiv(QString property, QString value, QWebElement *apParent) {
 	QString selector = QString(CSS_FORMAT)
 					   .arg("div")
 					   .arg(property)
@@ -244,8 +216,7 @@ QWebElementCollection WebEngine::findAllDiv(QString property, QString value, QWe
 	return apParent->findAll(selector);
 }
 
-QWebElement WebEngine::findFirstDiv(QString property, QString value, QWebElement *apParent)
-{
+QWebElement WebEngine::findFirstDiv(QString property, QString value, QWebElement *apParent) {
 	QString selector = QString(CSS_FORMAT)
 					   .arg("div")
 					   .arg(property)
