@@ -60,8 +60,10 @@ SUBDIRS += \
 #	defaqto_com2 \
 #	findpetboarding_com \
 #	dogsandpuppies_co_uk \
-	gundogbreeders_co_uk \
-	dogbreeds_co_uk \
+#	gundogbreeders_co_uk \
+#	dogbreeds_co_uk \
+	google_image \
+	breedersonline_co_uk \
 
 ###########################################################
 
