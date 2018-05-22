@@ -26,7 +26,14 @@ protected:
 	}
 
 private:
+	void getAllCountry();
+	void getAllCounty();
+	void getAllBreeder();
+	void getDetailBreeder();
 
+private:
+	QStringList listCountry;
+	QStringList listCounty;
 };
 
 #endif // gundogbreeders_co_uk_H

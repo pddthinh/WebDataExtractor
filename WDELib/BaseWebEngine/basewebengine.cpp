@@ -314,41 +314,25 @@ void BaseWebEngine::loadPage(QString astrURL) {
 	} while(false);
 }
 
-bool BaseWebEngine::gotoNextDataLink(ENU_STATE aeNextState) {
-	bool	lblRet = false;
+bool BaseWebEngine::gotoNextLink(QStringList* pList, ENU_STATE nextState) {
+	bool blRet = false;
 
 	do {
-		setStatus(mstrRemainItemFrmt.arg(mlstDataLink.count()));
+		if (pList == NULL) break;
 
-		if(mlstDataLink.isEmpty()) {
-			DEF_LOG(QLatin1String("gotoNextDataLink ---> Finished extract data"));
+		setStatus(mstrRemainItemFrmt.arg(pList->count()));
+
+		if (pList->isEmpty()) {
+			DEF_LOG(QLatin1String("gotoNextLink end --> Finished extract data"));
 			break;
 		}
 
-		lblRet = true;
-		meState = aeNextState;
-		loadPage(mlstDataLink.takeFirst());
-	} while(false);
+		blRet = true;
+		meState = nextState;
+		loadPage(pList->takeFirst());
+	} while (false);
 
-	return lblRet;
-}
-
-bool BaseWebEngine::gotoNextCategoryLink(ENU_STATE aeNextState) {
-	bool	lblRet = false;
-
-	do {
-		setStatus(mstrRemainItemFrmt.arg(mlstCategoryLink.count()));
-		if(mlstCategoryLink.isEmpty()) {
-			DEF_LOG(QLatin1String("gotoNextCategoryLink ---> Finished extract data"));
-			break;
-		}
-
-		lblRet = true;
-		meState = aeNextState;
-		loadPage(mlstCategoryLink.takeFirst());
-	} while(false);
-
-	return lblRet;
+	return blRet;
 }
 
 bool BaseWebEngine::loadJQuery(QString astrPath) {

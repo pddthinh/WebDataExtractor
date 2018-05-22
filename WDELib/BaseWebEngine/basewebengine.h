@@ -160,8 +160,13 @@ protected:
 
 	void initCustomControl();
 	QString updateURL(QString astrURL) const;
-	bool gotoNextDataLink(ENU_STATE aeNextState = E_STATE_GET_DETAIL_INFO);
-	bool gotoNextCategoryLink(ENU_STATE aeNextState = E_STATE_GET_SUB_CATEGORY);
+	bool gotoNextLink(QStringList* pList, ENU_STATE nextState);
+	inline bool gotoNextDataLink(ENU_STATE aeNextState = E_STATE_GET_DETAIL_INFO) {
+		return gotoNextLink(&mlstDataLink, aeNextState);
+	}
+	inline bool gotoNextCategoryLink(ENU_STATE aeNextState = E_STATE_GET_SUB_CATEGORY) {
+		return gotoNextLink(&mlstCategoryLink, aeNextState);
+	}
 	bool updateBaseRootURL(const QString & astrURL);
 	void logDataList();
 	bool updateData(DataEntry *apData, int aiColIdx, QWebElement *apElement, QString property = "");
