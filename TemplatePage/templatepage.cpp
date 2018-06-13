@@ -22,6 +22,11 @@ templatepage::templatepage(QWidget *apParent)
 
 	mpLog->setFilePath(QLatin1String("templatepage.txt"));
 ///////////////////////////////////////////////////////////
+	QString homeDir(::getenv("HOME"));
+	mpDBManager = new DBManager(homeDir + "/tmp/templatepage.db");
+	qDebug() << QLatin1String("Open local DB:") << mpDBManager->open()
+			 << QLatin1String("--> path: ") << mpDBManager->getDBPath();
+	qDebug() << QLatin1String("Create temp table:") << mpDBManager->createTmpTable();
 }
 
 enum enuDatabase {
@@ -33,6 +38,10 @@ void templatepage::initDatabase() {
 	mDbLstColName << QLatin1String("Name");
 	mDbLstKey << eName;
 	mDbTableName = QLatin1String("templatepage");
+
+	mpDBManager->createDataTable(mDbTableName,
+								 mDbLstColName,
+								 mDbLstKey);
 }
 
 void templatepage::doStart() {

@@ -20,7 +20,6 @@ thekennelclub_org_uk::thekennelclub_org_uk(QWidget *apParent)
 
 	QString homeDir(::getenv("HOME"));
 	mpDBManager = new DBManager(homeDir + "/tmp/thekennelclub_org_uk2.db");
-
 	qDebug() << QLatin1String("Open local DB:") << mpDBManager->open()
 			 << QLatin1String("--> path: ") << mpDBManager->getDBPath();
 	qDebug() << QLatin1String("Create temp table:") << mpDBManager->createTmpTable();
@@ -51,10 +50,9 @@ void thekennelclub_org_uk::initDatabase() {
 
 void thekennelclub_org_uk::doStart() {
 	do {
-		qDebug() << QLatin1String("Create data table: ")
-				 << mpDBManager->createDataTable(mDbTableName,
-												 mDbLstColName,
-												 mDbLstKey);
+		mpDBManager->createDataTable(mDbTableName,
+									 mDbLstColName,
+									 mDbLstKey);
 		if (!mpExtFileLoading->getExtractLink()) {
 			meState = E_STATE_GET_DETAIL_INFO;
 			mlstDataLink = mpDBManager->getAllFromTmpTable(BREEDER_TABLE);
@@ -127,16 +125,16 @@ void thekennelclub_org_uk::getBreederInAllArea() {
 
 	mpDBManager->insertTmpTable(link);
 
-//	mlstDataLink << link;
-//	if (mlstDataLink.count() >= 5) {
-//		DEF_LOG_LIST(mlstDataLink, "");
-//		qDebug() << QLatin1String("Saved item: ") << mlstDataLink.count();
-//		mlstDataLink.clear();
-//	}
+	//	mlstDataLink << link;
+	//	if (mlstDataLink.count() >= 5) {
+	//		DEF_LOG_LIST(mlstDataLink, "");
+	//		qDebug() << QLatin1String("Saved item: ") << mlstDataLink.count();
+	//		mlstDataLink.clear();
+	//	}
 
 	if (!gotoNextCategoryLink()) {
-//		if (mlstDataLink.count() > 0)
-//			DEF_LOG_LIST(mlstDataLink, "");
+		//		if (mlstDataLink.count() > 0)
+		//			DEF_LOG_LIST(mlstDataLink, "");
 
 		// NEXT: get breeder list
 		mlstCategoryLink = mpDBManager->getAllFromTmpTable();

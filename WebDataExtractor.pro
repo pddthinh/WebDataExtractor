@@ -62,7 +62,8 @@ SUBDIRS += \
 #	dogsandpuppies_co_uk \
 #	gundogbreeders_co_uk \
 #	dogbreeds_co_uk \
-	breedersonline_co_uk \
+#	breedersonline_co_uk \
+	champdogs_co_uk \
 
 ###########################################################
 

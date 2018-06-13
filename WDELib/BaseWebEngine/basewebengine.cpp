@@ -236,9 +236,9 @@ void BaseWebEngine::sltWebLoadFinished(bool ablStatus) {
 		mpStopTimer->stop();
 
 		if(ablStatus == false)
-			setStatus(QLatin1String("Page loaded with error(s)"));
+			setStatus(DEF_STATUS_ERROR);
 		else
-			setStatus(QLatin1String("Page loaded successfull"));
+			setStatus(DEF_STATUS_OK);
 
 		mblLastLoadStatus = ablStatus;
 
@@ -310,6 +310,9 @@ void BaseWebEngine::loadPage(QString astrURL) {
 			setURL(astrURL);
 
 		QString strURL = updateURL(astrURL);
+#if 1
+		qDebug() << strURL;
+#endif
 		mpWebView->setUrl(QUrl(strURL));
 	} while(false);
 }

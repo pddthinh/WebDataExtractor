@@ -40,6 +40,9 @@ using namespace nsDatabase;
 class DBLogger;
 class XMLLogger;
 
+#define DEF_STATUS_OK			QLatin1String("Page loaded successfull")
+#define DEF_STATUS_ERROR		QLatin1String("Page loaded with error(s)")
+
 namespace nsBaseWebEngine {
 
 typedef enum E_STATE {
