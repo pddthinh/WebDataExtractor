@@ -64,6 +64,7 @@ SUBDIRS += \
 #	dogbreeds_co_uk \
 #	breedersonline_co_uk \
 	champdogs_co_uk \
+	thekennelclub_org_uk3 \ # find-a-breeder
 
 ###########################################################
 
