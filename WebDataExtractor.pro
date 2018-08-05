@@ -7,8 +7,8 @@ CONFIG	+= ordered
 ###########################################################
 ## Library project
 SUBDIRS += \
-	WDELib \
-	WDEResource \
+WDELib \
+WDEResource \
 #	utWDELib \
 #	UKPostcodeHelper \
 ###########################################################
@@ -63,7 +63,7 @@ SUBDIRS += \
 #	gundogbreeders_co_uk \
 #	dogbreeds_co_uk \
 #	breedersonline_co_uk \
-	champdogs_co_uk \
+#	champdogs_co_uk \
 	thekennelclub_org_uk3 \ # find-a-breeder
 
 ###########################################################
@@ -71,7 +71,7 @@ SUBDIRS += \
 ###########################################################
 ## Project require MySQL database
 contains(DEFINES, USE_DATABASE) {
-	SUBDIRS += \
+SUBDIRS += \
 #		niceic-com \
 
 }

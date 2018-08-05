@@ -3,7 +3,7 @@
 /*
  * CSS reference
  * 		http://www.w3schools.com/cssref/css_selectors.asp
- */ 
+ */
 
 #define BASEURL "https://www.thekennelclub.org.uk/services/public/acbr/Default.aspx"
 
@@ -157,7 +157,8 @@ void thekennelclub_org_uk3::getBreederDetailData() {
 	updateData(&mData, eAddress, QLatin1String("#MainContent_LabelLocation"));
 	updateData(&mData, ePhone, QLatin1String("#MainContent_LabelPhone"));
 
-	element = mpWebView->getElementById(QLatin1String("DivContentMain"));
+	element = mpWebView->getElementById(QLatin1String("MainContent_DivAB"))
+			  .nextSibling();
 	QStringList breeds;
 	QWebElementCollection eCol = element.findAll(QLatin1String("a.underline"));
 	foreach(element, eCol)
@@ -166,6 +167,9 @@ void thekennelclub_org_uk3::getBreederDetailData() {
 
 	mpDBManager->insertData(&mData, mDbTableName);
 	mData.clearData();
+
+	if (!gotoNextDataLink())
+		showFinishMsg(QLatin1String("Finished extracting all data!"));
 }
 ////////////////////////////////////////////////////////////////////////
 
