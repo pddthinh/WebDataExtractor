@@ -26,7 +26,13 @@ protected:
 	}
 
 private:
+	QStringList mBreederIds;
+
+private:
 	void loadList();
+	void getBreederIdList();
+	bool gotoNextBreeder(ENU_STATE state = E_STATE_GET_SUB_CATEGORY);
+	void getBreederLinks();
 };
 
 #endif // breedersonline_co_uk_H

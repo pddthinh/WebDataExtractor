@@ -53,7 +53,7 @@ SUBDIRS += \
 #	homecheck_co_uk \
 #	defaqto_com \
 #	thekennelclub_org_uk \
-	thekennelclub_org_uk2 \ # findapuppy
+#	thekennelclub_org_uk2 \ # findapuppy
 #	find_a_vet \
 #	ic_upei_ca \
 #	icatcare_org \
@@ -63,9 +63,9 @@ SUBDIRS += \
 #	gundogbreeders_co_uk \
 #	dogbreeds_co_uk \
 #	breedersonline_co_uk \
-#	champdogs_co_uk \
-	thekennelclub_org_uk3 \ # find-a-breeder
-	dogsbarn_com \
+	champdogs_co_uk \
+#	thekennelclub_org_uk3 \ # find-a-breeder
+#	dogsbarn_com \
 
 ###########################################################
 

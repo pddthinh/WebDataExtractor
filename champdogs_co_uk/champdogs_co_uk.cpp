@@ -6,7 +6,10 @@
  * 		http://www.w3schools.com/cssref/css_selectors.asp
  */
 
-#define BASEURL "https://www.champdogs.co.uk/breeder"
+#define BASEURL "https://www.champdogs.co.uk/litter/%1"
+
+#define LITTER_ID_START		43500
+#define LITTER_ID_END		49400
 
 champdogs_co_uk::champdogs_co_uk(QWidget *apParent)
 	: BaseWebEngine(apParent) {
@@ -17,17 +20,19 @@ champdogs_co_uk::champdogs_co_uk(QWidget *apParent)
 	setBaseURL(BASEURL);
 
 	if(mpDBLogger != NULL)
-		mpDBLogger->setLogPath(QLatin1String("champdogs_co_uk.sql"));
+		mpDBLogger->setLogPath(QLatin1String("champdogs_co_uk2.sql"));
 
 	mpXMLLogger = new XMLLogger(mpLog, QLatin1String("champdogs_co_uk.xml"));
 
 	mpLog->setFilePath(QLatin1String("champdogs_co_uk.txt"));
 	///////////////////////////////////////////////////////////
 	QString homeDir(::getenv("HOME"));
-	mpDBManager = new DBManager(homeDir + "/tmp/champdogs_co_uk.db");
+	mpDBManager = new DBManager(homeDir + "/tmp/champdogs_co_uk3.db");
 	qDebug() << QLatin1String("Open local DB:") << mpDBManager->open()
 			 << QLatin1String("--> path: ") << mpDBManager->getDBPath();
 	qDebug() << QLatin1String("Create temp table:") << mpDBManager->createTmpTable();
+
+	mLitterID = LITTER_ID_START;
 }
 
 enum enuDatabase {
@@ -56,8 +61,7 @@ void champdogs_co_uk::initDatabase() {
 void champdogs_co_uk::doStart() {
 	do {
 		if (mpExtFileLoading->getExtractLink()) {
-			meState = E_STATE_INIT;
-			loadPage(BASEURL);
+			gotoNextLitter();
 			break;
 		}
 
@@ -76,12 +80,8 @@ void champdogs_co_uk::doStart() {
 void champdogs_co_uk::doWebLoadFinished() {
 	switch(meState)
 	{
-	case E_STATE_INIT:
-		getBreederCategories();
-		break;
-
 	case E_STATE_GET_SUB_CATEGORY:
-		getBreederList();
+		getBreederLink();
 		break;
 
 	case E_STATE_GET_DETAIL_INFO:
@@ -100,36 +100,101 @@ void champdogs_co_uk::doWebLoadFinished() {
 }
 
 ////////////////////////////////////////////////////////////////////////
-void champdogs_co_uk::getBreederCategories() {
-	QWebElement eBreedPics = mpWebView->getElementById(QLatin1String("breed_pics"));
-	QWebElementCollection eLinks = eBreedPics.findAll(QLatin1String("a"));
-	QWebElement eLink;
+//void champdogs_co_uk::getBreederCategories() {
+//	QWebElement eBreedPics = mpWebView->getElementById(QLatin1String("breed_pics"));
+//	QWebElementCollection eLinks = eBreedPics.findAll(QLatin1String("a"));
+//	QWebElement eLink;
 
-	foreach(eLink, eLinks)
-		mBreederCategories << QString("%1?start=all").arg(mpWebView->getHrefURL(&eLink));
+//	foreach(eLink, eLinks)
+//		mBreederCategories << QString("%1?start=all").arg(mpWebView->getHrefURL(&eLink));
 
-	if (!gotoNextLink(&mBreederCategories, E_STATE_GET_SUB_CATEGORY))
-		showFinishMsg(QLatin1String("Something goes wrong - can not go to next breeder category"));
+//	if (!gotoNextLink(&mBreederCategories, E_STATE_GET_SUB_CATEGORY))
+//		showFinishMsg(QLatin1String("Something goes wrong - can not go to next breeder category"));
+//}
+
+//void champdogs_co_uk::getBreederList() {
+//	QWebElementCollection eLinks = mpWebView->findAll(QLatin1String("a[itemprop=itemListElement]"));
+//	QWebElement eLink;
+//	QString txtLink;
+
+//	foreach(eLink, eLinks) {
+//		txtLink = mpWebView->getHrefURL(&eLink);
+//		mpDBManager->insertTmpTable(txtLink);
+//	}
+
+//	// statictic info
+//	{
+//		QString siteURL = mpWebView->url().toString();
+//		QString strTitle = mpWebView->findFirst(QLatin1String("div.breed_type h1.guided")).toPlainText();
+
+//		QWebElement eTmp = mpWebView->findFirst(QLatin1String("div.list div.link_bar p.link_bar"));
+//		QString strTmp = eTmp.toPlainText().replace(strTitle, QLatin1String(""));
+
+//		QString total = Utilities::extractValue2(strTmp, QLatin1String(" of "), QLatin1String(" "));
+//		QString extracted = QString("%1").arg(eLinks.count());
+
+//		QString line = QString("\"%1\"; \"%2\"; %3; %4")
+//					   .arg(strTitle)
+//					   .arg(siteURL)
+//					   .arg(total)
+//					   .arg(total == extracted ? "OK" : "NG");
+//		mpLog->logString(line);
+//	}
+
+//	if (!gotoNextLink(&mBreederCategories, E_STATE_GET_SUB_CATEGORY)) {
+//		qDebug() << QLatin1String("Finish extracting all breeders list");
+
+//		// load breeders list from DB
+//		mlstDataLink = mpDBManager->getAllFromTmpTable();
+//		if (!gotoNextDataLink())
+//			showFinishMsg(QLatin1String("Something goes wrong - Data list is empty!"));
+//	}
+//}
+
+bool champdogs_co_uk::gotoNextLitter() {
+	bool ret = false;
+
+	do {
+		if (mLitterID > LITTER_ID_END)
+			break;
+
+		meState = E_STATE_GET_SUB_CATEGORY;
+
+		QString url = QString(BASEURL).arg(mLitterID);
+		mLitterID++;
+
+		setStatus(QString("Remaining %1 ...").arg(LITTER_ID_END - mLitterID));
+		ret = true;
+
+		loadPage(url);
+	} while (false);
+
+	return ret;
 }
 
-void champdogs_co_uk::getBreederList() {
-	QWebElementCollection eLinks = mpWebView->findAll(QLatin1String("a[itemprop=itemListElement]"));
+void champdogs_co_uk::getBreederLink() {
+	QWebElementCollection colInfoLinks = mpWebView->getElementById(QLatin1String("container"))
+										 .findFirst(QLatin1String("div.content div.puppy div.littertext p.header"))
+										 .findAll(QLatin1String("a"))
+										 ;
 	QWebElement eLink;
-	QString txtLink;
-
-	foreach(eLink, eLinks) {
-		txtLink = mpWebView->getHrefURL(&eLink);
-		mpDBManager->insertTmpTable(txtLink);
+	QString breederLink;
+	bool found = false;
+	foreach (eLink, colInfoLinks) {
+		breederLink = mpWebView->getHrefURL(&eLink);
+		if (breederLink.indexOf(QLatin1String("/breeder/")) > 0) {
+			mpDBManager->insertTmpTable(breederLink);
+			found = true;
+			break;
+		}
 	}
 
-	if (!gotoNextLink(&mBreederCategories, E_STATE_GET_SUB_CATEGORY)) {
-		qDebug() << QLatin1String("Finish extracting all breeders list");
+	// not found ? log the link for debugging
+	if (!found)
+		mpLog->logString(mpWebView->url().toString());
 
-		// load breeders list from DB
-		mlstDataLink = mpDBManager->getAllFromTmpTable();
-		if (!gotoNextDataLink())
-			showFinishMsg(QLatin1String("Something goes wrong - Data list is empty!"));
-	}
+	if (!gotoNextLitter())
+		showFinishMsg(QLatin1String("Finish getting all breeder from litter list!"));
 }
 
 void champdogs_co_uk::getBreederDetail() {

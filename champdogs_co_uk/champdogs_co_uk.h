@@ -26,13 +26,17 @@ protected:
 	}
 
 private:
-	void getBreederCategories();
-	void getBreederList();
+//	void getBreederCategories();
+//	void getBreederList();
 	void getBreederDetail();
 	void getBreederWebsite();
 
+	void getBreederLink();
+	bool gotoNextLitter();
+
 private:
 	QStringList mBreederCategories;
+	int			mLitterID;
 };
 
 #endif // champdogs_co_uk_H
