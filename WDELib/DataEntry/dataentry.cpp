@@ -133,9 +133,11 @@ bool DataEntry::updateProperty(const QString &key, QStringList value, bool autoC
 
 		if (autoCorrect) {
 			QStringList tmpList;
-			foreach(QString tmp, value)
+			foreach(QString tmp, value) {
+				tmp = tmp.trimmed();
 				if (tmp.length() > 0)
 					tmpList << tmp;
+			}
 
 			foreach(QString tmp, tmpList)
 				mData[key] << Utilities::correctData(tmp);

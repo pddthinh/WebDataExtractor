@@ -228,7 +228,8 @@ QString Utilities::correctData(QString astrData)
 		astrData.replace(QLatin1String("&quot;"), QLatin1String("\""));
 		astrData.remove(QLatin1String("\r\n"));
 		astrData.replace(QLatin1String("\n"), QLatin1String(", "));
-//		astrData.replace(QLatin1String("'"), QLatin1String("''"));
+
+		astrData.replace(QLatin1String(" ,"), QLatin1String(","));
 	} while(false);
 
 	return astrData;

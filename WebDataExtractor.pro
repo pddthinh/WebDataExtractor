@@ -63,9 +63,10 @@ SUBDIRS += \
 #	gundogbreeders_co_uk \
 #	dogbreeds_co_uk \
 #	breedersonline_co_uk \
-	champdogs_co_uk \
+champdogs_co_uk \
 #	thekennelclub_org_uk3 \ # find-a-breeder
 #	dogsbarn_com \
+the_good_dog_guide_com \
 
 ###########################################################
 
