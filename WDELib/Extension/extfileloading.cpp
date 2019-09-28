@@ -186,6 +186,25 @@ int ExtFileLoading::getNumberOfSkipItem() {
 	return liRet;
 }
 
+bool ExtFileLoading::filterSkippedItem(QStringList *pList) {
+	bool blRet = false;
+
+	do {
+		if (pList == NULL) break;
+
+		int skip = getNumberOfSkipItem();
+
+		while (skip > 0 && !pList->isEmpty()) {
+			pList->takeFirst();
+			skip --;
+		}
+
+		blRet = true;
+	} while (false);
+
+	return blRet;
+}
+
 bool ExtFileLoading::isLoadFromFile() {
 	return getLoadPath().length() > 0;
 }

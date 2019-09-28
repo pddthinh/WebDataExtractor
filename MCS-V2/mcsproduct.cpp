@@ -23,10 +23,10 @@ MCSProduct::MCSProduct(QWidget *apParent)
 
 	setWebLoadTimeout(40000);
 
-	// init xmlUtil module
-	mpXMLUtil = new XMLUtil(XML_LOG_PATH);
-	if (mpXMLUtil->init() == false)
-		qDebug() << QLatin1String("Can not init XMLUtil module!");
+//	// init xmlUtil module
+//	mpXMLUtil = new XMLUtil(XML_LOG_PATH);
+//	if (mpXMLUtil->init() == false)
+//		qDebug() << QLatin1String("Can not init XMLUtil module!");
 }
 
 void MCSProduct::doStart()

@@ -66,7 +66,8 @@ SUBDIRS += \
 champdogs_co_uk \
 #	thekennelclub_org_uk3 \ # find-a-breeder
 #	dogsbarn_com \
-the_good_dog_guide_com \
+#the_good_dog_guide_com \
+british_horse_society_org_uk \
 
 ###########################################################
 

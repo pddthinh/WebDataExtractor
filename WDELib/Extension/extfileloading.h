@@ -29,6 +29,7 @@ public:
 	int getWebTimeout();
 	QStringList loadData();
 	void saveSettings();
+	bool filterSkippedItem(QStringList *pList);
 
 	QString getParamCategory();
 	int getParamPageIndex();

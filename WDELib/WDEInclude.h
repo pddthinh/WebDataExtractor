@@ -14,6 +14,7 @@
 #include "Utilities/utilities.h"
 #include "Database/sqlquerybuilder.h"
 #include "Extension/extfileloading.h"
+#include "Extension/extmainwnd.h"
 #include "Utilities/ContactSeeker.h"
 #include "Utilities/xmlutil.h"
 

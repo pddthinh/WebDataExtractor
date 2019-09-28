@@ -252,6 +252,13 @@ private:
 	QSslConfiguration		*mpSslConfig;
 };
 
+typedef struct tagWndInfo {
+	QString name;
+	QString url;
+	QString tableName;
+	BaseWebEngine *engine;
+} WND_INFO;
+
 #define WebEngine_Main(WebObject) \
 int main(int argc, char *argv[]) \
 { \

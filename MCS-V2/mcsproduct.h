@@ -36,7 +36,7 @@ private:
 	DATA_LIST	mSavedDataList;
 	DATA_LIST	mFinalDataList;
 	DataEntry	mCurrentEntry;
-	XMLUtil		*mpXMLUtil;
+//	XMLUtil		*mpXMLUtil;
 };
 
 #endif // MCSPRODUCT_H

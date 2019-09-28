@@ -33,7 +33,8 @@ SOURCES += \
 	Utilities/ContactSeeker.cpp \
 	Extension/textfilterwidget.cpp \
 	Utilities/xmlutil.cpp \
-	Database/dbmanager.cpp
+	Database/dbmanager.cpp \
+	Extension/extmainwnd.cpp
 
 HEADERS  += \
 	WDE.h \
@@ -52,7 +53,8 @@ HEADERS  += \
 	Utilities/ContactSeeker.h \
 	Extension/textfilterwidget.h \
 	Utilities/xmlutil.h \
-	Database/dbmanager.h
+	Database/dbmanager.h \
+	Extension/extmainwnd.h
 
 contains(DEFINES, USE_DATABASE) {
 	SOURCES += Database/mysqlhandler.cpp

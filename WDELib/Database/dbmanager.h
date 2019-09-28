@@ -24,6 +24,7 @@ public:
 	DBManager();
 	DBManager(const QString& dbPath);
 	bool open(const QString& dbPath = 0);
+	bool isOpen();
 	void close();
 
 	bool createTmpTable(const QString& tbName = TMP_TABLE);
