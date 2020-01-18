@@ -54,6 +54,7 @@ enum enuDatabase {
 	eTelephone,
 	eEmail,
 	eWebSite,
+	eDescription,
 	eDatabaseMax
 };
 
@@ -63,6 +64,7 @@ void british_horse_society_org_uk::initDatabase() {
 				  << QLatin1String("Telephone")
 				  << QLatin1String("Email")
 				  << QLatin1String("Website")
+				  << QLatin1String("Description")
 					 ;
 	mDbLstKey << eName << eTelephone << eWebSite;
 	mDbTableName = mpWndInfo->tableName;
@@ -157,6 +159,11 @@ void british_horse_society_org_uk::getClubDetail() {
 		text = mpWebView->getHrefURL(&link);
 		mData.updatePropertyString(eWebSite, text);
 	}
+
+	text = mpWebView->findFirst(QLatin1String("div#content-columns div.col.main-col div.cont"))
+		   .toPlainText();
+	if (!text.isEmpty())
+		mData.updatePropertyString(eDescription, text);
 
 	mpDBManager->insertData(&mData, mDbTableName);
 	mData.clearData();

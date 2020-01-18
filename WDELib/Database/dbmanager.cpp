@@ -94,11 +94,6 @@ QStringList DBManager::getAllFromTmpTable(const QString &tbName) {
 	do {
 		QSqlQuery select(QString("SELECT * FROM '%1'").arg(tbName), mDB);
 		int idValue = select.record().indexOf(TMP_TBL_COL_VALUE);
-		if (!select.next()){
-			qDebug() << QLatin1String("SQL select failed, error: ") << select.lastError().text();
-			break;
-		}
-
 		while (select.next())
 			result << select.value(idValue).toString();
 
